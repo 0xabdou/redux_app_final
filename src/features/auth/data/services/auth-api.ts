@@ -1,10 +1,11 @@
 import User from "../../types/user";
 import {GenericError} from "../../../../shared/generic-error";
+import {EmailPass} from "../../types/email-pass";
 
 export interface IAuthApi {
   getCurrentUser(): Promise<User>;
 
-  signInWithEmailAndPassword(email: string, password: string): Promise<User>;
+  signInWithEmailAndPassword(emailPass: EmailPass): Promise<User>;
 }
 
 export class FakeAuthApi implements IAuthApi {
@@ -20,7 +21,7 @@ export class FakeAuthApi implements IAuthApi {
     return this.getUser();
   }
 
-  signInWithEmailAndPassword(email: string, password: string): Promise<User> {
+  signInWithEmailAndPassword({email, password} : EmailPass): Promise<User> {
     if (email == FakeAuthApi.validEmail && password == FakeAuthApi.validPassword)
       return this.getUser();
     throw new GenericError('invalid_email_or_password');

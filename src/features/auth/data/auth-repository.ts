@@ -4,11 +4,12 @@ import {IAuthApi} from "./services/auth-api";
 import AuthError from "../types/auth-error";
 import {ILocalStorage} from "./services/local-storage";
 import {isGenericError} from "../../../shared/generic-error";
+import {EmailPass} from "../types/email-pass";
 
 export default interface IAuthRepository {
   getCurrentUser(): Promise<Either<AuthError, User | null>>;
 
-  signInWithEmailAndPassword(email: string, password: string): Promise<Either<AuthError, User>>;
+  signInWithEmailAndPassword(emailPass: EmailPass): Promise<Either<AuthError, User>>;
 
   signOut(): Promise<Either<AuthError, null>>;
 }
@@ -36,9 +37,9 @@ export class AuthRepository implements IAuthRepository {
     return right(null);
   }
 
-  async signInWithEmailAndPassword(email: string, password: string): Promise<Either<AuthError, User>> {
+  async signInWithEmailAndPassword(emailPass: EmailPass): Promise<Either<AuthError, User>> {
     try {
-      const user = await this._authApi.signInWithEmailAndPassword(email, password);
+      const user = await this._authApi.signInWithEmailAndPassword(emailPass);
       await this._localStorage.write(AuthRepository.KEY_ACCESS_TOKEN, user.accessToken);
       return right(user);
     } catch (e) {
