@@ -15,3 +15,11 @@ export const nonSelectable: CSSProperties = {
   '-o-user-select': 'none',
   'user-select': 'none',
 };
+
+export const textSelectable: CSSProperties = {
+  '-moz-user-select': 'text',
+  '-webkit-user-select': 'text',
+  '-khtml-user-select': 'text',
+  '-o-user-select': 'text',
+  'user-select': 'text',
+};
