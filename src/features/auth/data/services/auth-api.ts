@@ -17,19 +17,26 @@ export class FakeAuthApi implements IAuthApi {
   private static validEmail = 'escanor@gmail.com';
   private static validPassword = 'password';
 
-  getCurrentUser(): Promise<User> {
+  async getCurrentUser(): Promise<User> {
+    await this.waiter();
     return this.getUser();
   }
 
-  signInWithEmailAndPassword({email, password} : EmailPass): Promise<User> {
+  async signInWithEmailAndPassword({email, password}: EmailPass): Promise<User> {
+    await this.waiter();
     if (email == FakeAuthApi.validEmail && password == FakeAuthApi.validPassword)
       return this.getUser();
     throw new GenericError('invalid_email_or_password');
   }
 
   async getUser() {
-    return new Promise<User>(resolve => {
-      setTimeout(() => resolve(FakeAuthApi.fakeUser), 1000);
+    await this.waiter();
+    return FakeAuthApi.fakeUser;
+  }
+
+  waiter() {
+    return new Promise(resolve => {
+      setTimeout(() => resolve(null), 1000);
     });
   }
 }

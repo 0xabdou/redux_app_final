@@ -1,18 +1,12 @@
 import LoggedInPage from "../features/auth/ui/logged-in-page";
-import {MuiThemeProvider} from "@material-ui/core";
 import LoginPage from "../features/auth/ui/login-page";
-import theme from "../styles/theme";
+import {useSelector} from "react-redux";
+import {AppState} from "./store";
 
-function App() {
-  const loggedIn = false;
+const App = () => {
+  const user = useSelector((state: AppState) => state.auth.currentUser);
 
-  return (
-    <MuiThemeProvider theme={theme}>
-      {loggedIn && <LoggedInPage/>}
-      {!loggedIn && <LoginPage/>}
-    </MuiThemeProvider>
-  );
-}
-
+  return user != null ? <LoggedInPage/> : <LoginPage/>;
+};
 
 export default App;

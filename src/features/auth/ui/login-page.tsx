@@ -1,9 +1,12 @@
 import Logo from '../../../assets/logo.png';
-import {Button, createStyles, makeStyles, TextField, Theme} from "@material-ui/core";
-import React, {useCallback, useState} from "react";
+import {Button, CircularProgress, createStyles, makeStyles, TextField, Theme} from "@material-ui/core";
+import React, {useCallback, useContext, useState} from "react";
 import {nonDraggable, nonSelectable} from "../../../styles/shared";
 import ErrorSnackbar from "../../../shared/components/error-snackbar";
 import AuthError from "../types/auth-error";
+import {AuthActionsContext} from "../auth-actions-context";
+import {useDispatch, useSelector} from "react-redux";
+import {AppState} from "../../../app/store";
 
 const validators = {
   validateEmail(email: string): string | null {
@@ -24,6 +27,12 @@ const LoginPage = () => {
   const [emailError, setEmailError] = useState<string | null>(null);
   const [password, setPassword] = useState('');
   const [passwordError, setPasswordError] = useState<string | null>(null);
+
+  const {loginWithEmailAndPass} = useContext(AuthActionsContext);
+  const dispatch = useDispatch();
+  const {loading, error} = useSelector((state: AppState) => {
+    return {loading: state.auth.loading, error: state.auth.error};
+  });
 
   const classes = useStyles();
 
@@ -48,10 +57,9 @@ const LoginPage = () => {
   const loginClicked = useCallback((e: React.MouseEvent | React.FormEvent) => {
     e.preventDefault();
     if (validate()) {
-      // TODO: login
-      return;
+      dispatch(loginWithEmailAndPass({email, password}));
     }
-  }, [validate]);
+  }, [validate, dispatch, loginWithEmailAndPass, email, password]);
 
   const stringifyError = useCallback((error: AuthError | null): string => {
     switch (error) {
@@ -86,12 +94,15 @@ const LoginPage = () => {
           error={!!passwordError}
           helperText={passwordError ?? undefined}
         />
-        <Button color='primary' variant='contained' onClick={loginClicked} type='submit'>
-          Login
-        </Button>
+        <div className={classes.buttonWrapper}>
+          {!loading && <Button color='primary' variant='contained' onClick={loginClicked} type='submit'>
+            Login
+          </Button>}
+          {loading && <CircularProgress/>}
+        </div>
       </form>
       <ErrorSnackbar<AuthError>
-        currentError={null}
+        currentError={error}
         stringify={stringifyError}
       />
     </div>
@@ -126,6 +137,13 @@ const useStyles = makeStyles((theme: Theme) => {
     textField: {
       width: '300px',
       marginBottom: spacing,
+    },
+    buttonWrapper: {
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'center',
+      alignItems: 'center',
+      height: '50px',
     },
     '@keyframes rotate': {
       '0%': {

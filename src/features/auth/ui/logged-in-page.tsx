@@ -1,6 +1,8 @@
 import {Avatar, Button, createStyles, makeStyles, Theme} from "@material-ui/core";
-import {useCallback} from "react";
+import {useCallback, useContext} from "react";
 import {nonDraggable, textSelectable} from "../../../styles/shared";
+import {useDispatch} from "react-redux";
+import {AuthActionsContext} from "../auth-actions-context";
 
 const fakeUser = {
   accessToken: 'some_access_token',
@@ -9,11 +11,13 @@ const fakeUser = {
 };
 
 const LoggedInPage = () => {
+  const dispatch = useDispatch();
+  const {logout} = useContext(AuthActionsContext);
   const classes = useStyles();
 
   const logoutClicked = useCallback(() => {
-    // TODO: logout
-  }, []);
+    dispatch(logout());
+  }, [dispatch, logout]);
 
   return (
     <div className={classes.layout}>
