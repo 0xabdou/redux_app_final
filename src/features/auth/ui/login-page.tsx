@@ -1,12 +1,9 @@
 import Logo from '../../../assets/logo.png';
 import {Button, CircularProgress, createStyles, makeStyles, TextField, Theme} from "@material-ui/core";
-import React, {useCallback, useContext, useState} from "react";
+import React, {useCallback, useState} from "react";
 import {nonDraggable, nonSelectable} from "../../../styles/shared";
 import ErrorSnackbar from "../../../shared/components/error-snackbar";
 import AuthError from "../types/auth-error";
-import {AuthActionsContext} from "../auth-actions-context";
-import {useDispatch, useSelector} from "react-redux";
-import {AppState} from "../../../app/store";
 
 const validators = {
   validateEmail(email: string): string | null {
@@ -28,11 +25,8 @@ const LoginPage = () => {
   const [password, setPassword] = useState('');
   const [passwordError, setPasswordError] = useState<string | null>(null);
 
-  const {loginWithEmailAndPass} = useContext(AuthActionsContext);
-  const dispatch = useDispatch();
-  const {loading, error} = useSelector((state: AppState) => {
-    return {loading: state.auth.loading, error: state.auth.error};
-  });
+  const loading = false;
+  const error = null;
 
   const classes = useStyles();
 
@@ -57,9 +51,9 @@ const LoginPage = () => {
   const loginClicked = useCallback((e: React.MouseEvent | React.FormEvent) => {
     e.preventDefault();
     if (validate()) {
-      dispatch(loginWithEmailAndPass({email, password}));
+      // TODO: login
     }
-  }, [validate, dispatch, loginWithEmailAndPass, email, password]);
+  }, [validate]);
 
   const stringifyError = useCallback((error: AuthError | null): string => {
     switch (error) {

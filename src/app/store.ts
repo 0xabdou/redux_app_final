@@ -1,18 +1,13 @@
 import {combineReducers} from "redux";
-import {configureStore, getDefaultMiddleware} from "@reduxjs/toolkit";
-import {StoreExtraArg} from "./dependencies";
-import authReducer from "../features/auth/auth-slice";
+import {configureStore} from "@reduxjs/toolkit";
 
 const rootReducer = combineReducers({
-  auth: authReducer,
+  // Add reducers
 });
 
-const createStore = (extraArg: StoreExtraArg) => {
+const createStore = () => {
   return configureStore({
     reducer: rootReducer,
-    middleware: getDefaultMiddleware({
-      thunk: {extraArgument: extraArg},
-    }),
   });
 };
 
