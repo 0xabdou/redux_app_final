@@ -2,13 +2,12 @@ import {Avatar, Button, createStyles, makeStyles, Theme} from "@material-ui/core
 import {useCallback} from "react";
 import {nonDraggable, textSelectable} from "../../../styles/shared";
 
-const fakeUser = {
-  accessToken: 'some_access_token',
-  username: 'escanor',
-  photoURL: 'https://avatars.githubusercontent.com/u/56047563?s=460&u=bec218f4b26de23ad44779a2d3cfd964fcb0732a&v=4'
-};
-
 const LoggedInPage = () => {
+  const user = {
+    accessToken: 'some_access_token',
+    username: 'escanor',
+    photoURL: 'https://avatars.githubusercontent.com/u/56047563?s=460&u=bec218f4b26de23ad44779a2d3cfd964fcb0732a&v=4'
+  };
   const classes = useStyles();
 
   const logoutClicked = useCallback(() => {
@@ -17,8 +16,8 @@ const LoggedInPage = () => {
 
   return (
     <div className={classes.layout}>
-      <Avatar className={classes.avatar} src={fakeUser.photoURL}/>
-      <span className={classes.username}>@{fakeUser.username}</span>
+      <Avatar className={classes.avatar} src={user.photoURL}/>
+      <span className={classes.username}>@{user.username}</span>
       <Button variant='contained' color='primary' onClick={logoutClicked}>
         Logout
       </Button>
