@@ -5,11 +5,18 @@ import reportWebVitals from './reportWebVitals';
 import './index.css';
 import {MuiThemeProvider} from "@material-ui/core";
 import theme from "./styles/theme";
+import {Provider} from "react-redux";
+import AuthActionsProvider from "./features/auth/auth-actions-context";
+import {store} from "./app/dependencies";
 
 ReactDOM.render(
-  <MuiThemeProvider theme={theme}>
-    <App/>
-  </MuiThemeProvider>,
+  <Provider store={store}>
+    <AuthActionsProvider>
+      <MuiThemeProvider theme={theme}>
+        <App/>
+      </MuiThemeProvider>
+    </AuthActionsProvider>
+  </Provider>,
   document.getElementById('root')
 );
 

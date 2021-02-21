@@ -4,6 +4,8 @@ import React, {useCallback, useState} from "react";
 import {nonDraggable, nonSelectable} from "../../../styles/shared";
 import ErrorSnackbar from "../../../shared/components/error-snackbar";
 import AuthError from "../types/auth-error";
+import {useAppDispatch, useAppSelector} from "../../../app/redux-hooks";
+import {useAuthActions} from "../auth-actions-context";
 
 const validators = {
   validateEmail(email: string): string | null {
@@ -24,9 +26,12 @@ const LoginPage = () => {
   const [emailError, setEmailError] = useState<string | null>(null);
   const [password, setPassword] = useState('');
   const [passwordError, setPasswordError] = useState<string | null>(null);
+  const {loginWithEmailAndPass} = useAuthActions();
+  const dispatch = useAppDispatch();
 
-  const loading = false;
-  const error = null;
+  const {loading, error} = useAppSelector(state => {
+    return {loading: state.auth.loading, error: state.auth.error};
+  });
 
   const classes = useStyles();
 
@@ -51,9 +56,9 @@ const LoginPage = () => {
   const loginClicked = useCallback((e: React.MouseEvent | React.FormEvent) => {
     e.preventDefault();
     if (validate()) {
-      // TODO: login
+      dispatch(loginWithEmailAndPass({email, password}));
     }
-  }, [validate]);
+  }, [dispatch, validate, loginWithEmailAndPass, email, password]);
 
   const stringifyError = useCallback((error: AuthError | null): string => {
     switch (error) {
