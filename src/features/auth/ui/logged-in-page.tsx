@@ -1,18 +1,25 @@
 import {Avatar, Button, createStyles, makeStyles, Theme} from "@material-ui/core";
 import {useCallback} from "react";
 import {nonDraggable, textSelectable} from "../../../styles/shared";
+import {useAppDispatch, useAppSelector} from "../../../app/redux-hooks";
+import {shallowEqual} from "react-redux";
+import {useAuthActions} from "../auth-actions-context";
 
 const LoggedInPage = () => {
-  const user = {
-    accessToken: 'some_access_token',
-    username: 'escanor',
-    photoURL: 'https://avatars.githubusercontent.com/u/56047563?s=460&u=bec218f4b26de23ad44779a2d3cfd964fcb0732a&v=4'
-  };
+  const user = useAppSelector(state => state.auth.currentUser, shallowEqual);
+  const dispatch = useAppDispatch();
+  const {logout} = useAuthActions();
+
   const classes = useStyles();
 
   const logoutClicked = useCallback(() => {
-    // TODO: logout
-  }, []);
+    dispatch(logout());
+  }, [dispatch, logout]);
+
+  if (user == null) {
+    // This should never happen
+    throw new Error('Displaying the LoggedInPage without a logged in user');
+  }
 
   return (
     <div className={classes.layout}>
